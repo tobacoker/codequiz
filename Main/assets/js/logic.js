@@ -159,19 +159,22 @@ if (time <= 0) {
 function saveHighScore() {
 
   // get the value of the initials input box
+  let initials = initialsEl.value.trim();
 
   // make sure the value of the initials input box wasn't empty
+if (initials !== '') {
 
   // if it is not, check and see if there is a value of high scores in local storage
-
+let highscores = JSON.parse(localStorage.getItem('highscores')) || [];
   // if there isn't any, then create a new array to store the high score
 
   // add the new initials and high score to the array
+highscores.push({initials: initials, score: time});
 
   // convert the array to a piece of text
-
+highscores.push({initials: initials, score: time});
   // store the high score in local storage
-
+localStorage.setItem('highscores', JSON.stringify(highscores));
   // otherwise, if there are high scores stored in local storage,
   // retrieve the local storage value that has the high scores,
   // convert it back to an array,
@@ -180,12 +183,16 @@ function saveHighScore() {
   // then store the new array (converted to text) back in local storage
 
   // finally, redirect the user to the high scores page.
-
+window.location.href = 'highscores.html';
+}
 }
 
 // use this function when the user presses the "enter" key when submitting high score initials
 function checkForEnter(event) {
   // if the user presses the enter key, then call the saveHighscore function
+if (event.key === 'Enter') {
+  saveHighScore();
+}
 }
 
 // user clicks button to submit initials
