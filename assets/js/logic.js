@@ -1,7 +1,10 @@
+
+
 // add variables that keep track of the quiz "state"
 let currentQuestionIndex = 0;
 let time = questions.length * 15;
 let timerId;
+let numberOfQuestions = 4;
 
 // add variables to reference DOM elements
 // example is below
@@ -11,12 +14,12 @@ let timerEl = document.getElementById('timer');
 let initialsEl = document.getElementById('initials');
 let startBtn = document.getElementById('start');
 let submitBtn = document.getElementById('submit');
-let choices = document.getElementById('choices');
+let choicesEl = document.getElementById('choices');
 
 
 // reference the sound effects
-let sfxRight = new Audio('assets/sfx/correct.wav');
-let sfxWrong = new Audio('assets/sfx/incorrect.wav');
+let sfxRight = new Audio('Main/assets/sfx/correct.wav');
+let sfxWrong = new Audio('Main/assets/sfx/incorrect.wav');
 
 function startQuiz() {
   // hide start screen
@@ -30,7 +33,8 @@ function startQuiz() {
  timerId = setInterval(clockTick, 1000);
 
   // show starting time
-  timerEl.textContent = time;
+  document.getElementById('starting-time').textContent = time;
+  console.log('Starting Time:', time);
 
   // call a function to show the next question
   getQuestion();
@@ -38,37 +42,33 @@ function startQuiz() {
 
 function getQuestion() {
 
-  // get current question object from array
 let currentQuestion = questions[currentQuestionIndex];
 
-  // update title with current question
 document.getElementById('question-title').textContent = currentQuestion.title;
 
-  // clear out any old question choices
+
   choices.innerHTML = '';
 
-  // loop over the choices for each question
   for (let i =0; i <currentQuestion.choices.length; i++)
-  // get the number of questions
+  
 
-  let numberOfQuestions; // assign it the value of the length of the questions array
+ 
   for (let i = 0; i < numberOfQuestions; i++) {
 
-    // create a new button for each choice, setting the label and value for the button
+
 let choiceButton = document.createElement('button');
 choiceButton.textContent = currentQuestion.choices[i];
 choiceButton.setAttribute('value',currentQuestion.choices[i]);
 
-    // display the choice button on the page
+    
 choices.appendChild(choiceButton);
   }
 }
 
 function questionClick(event) {
-  // identify the targeted button that was clicked on
+ 
 let clickedButton = event.target;
 
-  // if the clicked element is not a choice button, do nothing.
 if (!clickedButton.matches('button')){
   return;
 }
@@ -93,7 +93,7 @@ if (time < 0) {
   sfxWrong.play();
 
   // display "wrong" feedback on page
-feedbackEl.textContent = 'wrong;'
+feedbackEl.textContent = 'wrong';
 } else {
   // play "right" sound effect
   sfxRight.play()
@@ -132,7 +132,7 @@ function quizEnd() {
   clearInterval(timerId);
 
   // show end screen
-  document.getElementById('end-screen').style.display = 'block;'
+  document.getElementById('end-screen').style.display = 'block';
 
   // show final score
   document.getElementById('final-score').textContent = time;
@@ -172,9 +172,12 @@ let highscores = JSON.parse(localStorage.getItem('highscores')) || [];
 highscores.push({initials: initials, score: time});
 
   // convert the array to a piece of text
-highscores.push({initials: initials, score: time});
+  highscores.sort((a, b) => b.score - a.score);
+
   // store the high score in local storage
 localStorage.setItem('highscores', JSON.stringify(highscores));
+
+
   // otherwise, if there are high scores stored in local storage,
   // retrieve the local storage value that has the high scores,
   // convert it back to an array,
